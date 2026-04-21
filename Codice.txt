@@ -1,0 +1,1186 @@
+libname aspetti "/home/u64178956/vita_quotidiana";
+
+proc import datafile="/home/u64178956/vita_quotidiana/AVQ_Microdati_2023.txt" 
+		out=aspetti.avg_microdati dbms=dlm replace;
+	delimiter='09'x;
+	getnames=yes;
+run;
+
+/* Creazione del dataset 2023 con le variabili da analizzare*/
+DATA aspetti.aspetti;
+	SET aspetti.avg_microdati(KEEP=FREQIN12 INCOMU6 INCOMU7 INTATT11 INTATT13 
+		INTATT18A TELCIN PC PARENT AMICI2 RELFAM RELAM TEMLIB AMICI FIDUCIA VOTOVI 
+		FUTUASP ETAMi SESSO STCIVMi ISTRMi CONDMi ANNO REGMf REDPRMi CITTMi);
+RUN;
+
+/* Decodifica dei metadati e creazione delle etichette*/
+PROC FORMAT LIBRARY=aspetti;
+	VALUE freq_internet 1="Tutti i giorni" 2="Qualche volta alla settimana" 
+		3="Una volta alla settimana" 4="Meno di 4 volte al mese" 
+		5="Meno di una volta al mese";
+	VALUE telefono 1="No" 2="Sì"; 
+	VALUE social 7="No" 8="Sì";
+	VALUE opinioni 1="No" 2="Sì";
+	VALUE bancario 1="No" 2="Sì";
+	VALUE vendita 3="No" 4="Sì";
+	VALUE corsi 1="No" 2="Sì";
+	VALUE computer 1="No" 2="Sì";
+	VALUE parenti 1="No" 2="Sì";
+	VALUE amici 1="No" 2="Sì" 3="Non so";
+	VALUE soddisfazione_fam 1="Molto" 2="Abbastanza" 3="Poco" 4="Per niente";
+	VALUE soddisfazione_amici 1="Molto" 2="Abbastanza" 3="Poco" 4="Per niente";
+	VALUE soddisfazione_tempo 1="Molto" 2="Abbastanza" 3="Poco" 4="Per niente";
+	VALUE incontro_amici 1="Tutti i giorni" 2="Più volte di una volta settimana" 
+		3="Una volta a settimana" 4="Meno di 4 volte al mese" 
+		5="Qualche volta durante l'anno" 6="Mai" 7="Non ho amici";
+	VALUE fiducia 1="Gran parte della gente è degna di fiducia" 
+		2="Bisogna stare molto attenti";
+	VALUE soddisfazione_vita 0="Per niente soddisfatto" 1="Molto insoddisfatto" 
+		2="Insoddisfatto" 3="Abbastanza insoddisfatto" 4="Leggermente insoddisfatto" 
+		5="Né soddisfatto né insoddisfatto" 6="Leggermente soddisfatto" 
+		7="Abbastanza soddisfatto" 8="Soddisfatto" 9="Molto soddisfatto" 
+		10="Completamente soddisfatto";
+	VALUE aspettative 1="Migliorerà" 2="Resterà la stessa" 3="Peggiorerà" 
+		4="Non so";
+	VALUE eta 001="0-2 anni" 002="3-5 anni" 003="6-10 anni" 004="11-13 anni" 
+		005="14-15 anni" 006="16-17 anni" 007="18-19 anni" 008="20-24 anni" 
+		009="25-34 anni" 010="35-44 anni" 011="45-54 anni" 012="55-59 anni" 
+		013="60-64 anni" 014="65-74 anni" 015="75 anni e più";
+	VALUE eta_gruppi 1="Meno di 15 anni" 2="15-24 anni" 3="25-34 anni" 
+		4="35-44 anni" 5="45-54 anni" 6="55-64 anni" 7="65 anni e più";
+	VALUE sesso 1="Maschio" 2="Femmina";
+	VALUE stato_civile 1="Celibe/Nubile" 2="Coniugato/a" 
+		3="Separato/a o divorziato/a" 6="Vedovo/a" 9="Non disponibile";
+	VALUE istruzione 01="Laurea e post-laurea" 07="Diploma" 09="Licenza media" 
+		10="Licenza elementare / nessun titolo" 99="Non disponibile";
+	VALUE condizione 1="Occupato" 2="In cerca di occupazione" 3="Inattivo" 
+		9="Non disponibile";
+	VALUE anno;
+	VALUE regione 010="Piemonte" 020="Valle d'Aosta" 030="Lombardia" 
+		040="Trentino-Alto Adige" 050="Veneto" 060="Friuli-Venezia Giulia" 
+		070="Liguria" 080="Emilia-Romagna" 090="Toscana" 100="Umbria" 110="Marche" 
+		120="Lazio" 130="Abruzzo" 140="Molise" 150="Campania" 160="Puglia" 
+		170="Basilicata" 180="Calabria" 190="Sicilia" 200="Sardegna" 444="Nord-ovest" 
+		555="Nord-est" 666="Centro" 777="Sud" 888="Isole" 999="Non disponibile";
+	VALUE reddito 1="Reddito da lavoro dipendente" 2="Reddito da lavoro autonomo" 
+		3="Pensione" 4="Indennità e provvidenze varie" 5="Redditi patrimoniali" 
+		6="Mantenimento da parte della famiglia";
+	VALUE cittadinanza 1="Italiana" 3="Straniera" 9="Non disponibile";
+RUN;
+
+DATA aspetti.aspetti;
+	SET aspetti.avg_microdati;
+	FORMAT USOCELL uso_cellulare.
+
+FREQIN12 freq_internet. 
+
+INCOMU6 social. 
+
+INCOMU7 opinioni. 
+
+INTATT11 bancario. 
+
+INTATT13 vendita. 
+
+INTATT18A corsi. 
+
+TELCIN telefono.
+
+PC computer. 
+
+PARENT parenti. 
+
+AMICI2 amici. 
+
+RELFAM soddisfazione_fam. 
+
+RELAM soddisfazione_amici. 
+
+TEMLIB soddisfazione_tempo. 
+
+AMICI incontro_amici. 
+
+FIDUCIA fiducia. 
+
+VOTOVI soddisfazione_vita. 
+
+FUTUASP aspettative. 
+
+ETAMi eta. 
+
+SESSO sesso. 
+
+STCIVMi stato_civile. 
+
+ISTRMi istruzione. 
+
+CONDMi condizione.
+
+ANNO anno.
+
+REGMf regione.
+
+REDPRMi reddito. 
+
+CITTMi cittadinanza.;
+	LABEL TELCIN="Uso del cellulare" 
+		FREQIN12="Frequenza uso Internet (ultimi 12 mesi)" 
+		INCOMU6="Uso dei social network" INCOMU7="Espressione di opinioni online" 
+		INTATT11="Uso di servizi bancari online" 
+		INTATT13="Vendita online di beni/servizi" 
+		INTATT18A="Partecipazione a corsi online" 
+		PC="Disponibilità di computer in casa" PARENT="Parenti su cui contare" 
+		AMICI2="Amici su cui contare" 
+		RELFAM="Soddisfazione per le relazioni familiari" 
+		RELAM="Soddisfazione per le relazioni con amici" 
+		TEMLIB="Soddisfazione per il tempo libero" 
+		AMICI="Frequenza di incontro con amici" 
+		FIDUCIA="Livello di fiducia nella società" 
+		VOTOVI="Soddisfazione per la propria vita" 
+		FUTUASP="Aspettative sulla situazione personale" ETAMi="Fascia d’età" 
+		SESSO="Sesso" STCIVMi="Stato civile" ISTRMi="Titolo di studio" 
+		CONDMi="Condizione occupazionale" ANNO="Anno" 
+		REGMf="Regione di residenza dell'intervistato" 
+		REDPRMi="Fonte principale di reddito" CITTMi="Cittadinanza";
+RUN;
+
+OPTIONS FMTSEARCH=(aspetti);
+
+PROC PRINT DATA=aspetti.aspetti (obs=100) LABEL;
+		var ISTRMi CONDMi ANNO REGMf REDPRMi CITTMi;
+RUN;
+
+proc format library=aspetti fmtlib;
+run;
+
+/* Analisi dei valori mancanti */
+PROC MEANS DATA=aspetti.aspetti NMISS;
+	VAR FREQIN12 INCOMU6 INCOMU7 INTATT11 INTATT13 INTATT18A TELCIN PC PARENT 
+		AMICI2 RELFAM RELAM TEMLIB AMICI FIDUCIA VOTOVI FUTUASP ETAMi SESSO STCIVMi 
+		ISTRMi CONDMi ANNO REGMf REDPRMi CITTMi;
+RUN;
+
+PROC FREQ DATA=aspetti.aspetti;
+	TABLES ISTRMi STCIVMi CONDMi CITTMi REGMf / MISSING NOCUM;
+RUN;
+
+/*Anagrafiche 2023: esplorazione dell'unità di analisi */
+/* Analisi dell'età e riclassificazione degli intervalli delle fasce d'età*/
+PROC MEANS DATA=aspetti.aspetti N MEAN STD MIN MAX;
+	VAR ETAMi;
+RUN;
+
+PROC FREQ DATA=aspetti.aspetti;
+	TABLES ETAMi / OUT=FreqData NOCUM;
+RUN;
+
+PROC SGPLOT DATA=FreqData;
+	VBAR ETAMi / RESPONSE=COUNT;
+	XAXIS LABEL="Fascia d'età";
+	YAXIS LABEL="Numero di persone";
+	TITLE "Distribuzione delle fasce d'età completa";
+RUN;
+
+DATA FreqData_Mod;
+	SET FreqData;
+	LENGTH FasciaEta $15;
+
+	IF ETAMi IN (1, 2, 3, 4, 5) THEN
+		FasciaEta="Meno di 15 anni";
+	ELSE IF ETAMi IN (6, 7, 8) THEN
+		FasciaEta="15-24 anni";
+	ELSE IF ETAMi IN (9) THEN
+		FasciaEta="25-34 anni";
+	ELSE IF ETAMi IN (10) THEN
+		FasciaEta="35-44 anni";
+	ELSE IF ETAMi IN (11) THEN
+		FasciaEta="45-54 anni";
+	ELSE IF ETAMi IN (12, 13) THEN
+		FasciaEta="55-64 anni";
+	ELSE IF ETAMi IN (14, 15) THEN
+		FasciaEta="65 anni e più";
+RUN;
+
+PROC SGPLOT DATA=FreqData_Mod;
+	VBAR FasciaEta / RESPONSE=COUNT;
+	XAXIS LABEL="Fascia d'età" DISCRETEORDER=DATA;
+	YAXIS LABEL="Numero di persone";
+	TITLE "Distribuzione delle fasce d'età";
+RUN;
+
+/* Analisi esplorativa */
+PROC FREQ DATA=aspetti.aspetti;
+	TABLES SESSO / OUT=Freq_SESSO NOCUM;
+	TABLES STCIVMi / OUT=Freq_STCIVMi NOCUM;
+	TABLES ISTRMi / OUT=Freq_ISTRMi NOCUM;
+	TABLES CONDMi / OUT=Freq_CONDMi NOCUM;
+	TABLES REGMf / OUT=Freq_REGMf NOCUM;
+	TABLES REDPRMi / OUT=Freq_REDPRMi NOCUM;
+	TABLES CITTMi / OUT=Freq_CITTMi NOCUM;
+RUN;
+
+/* Grafici a barre per ogni variabile analizzata in precedenza */
+PROC SGPLOT DATA=Freq_SESSO;
+	VBAR SESSO / RESPONSE=COUNT;
+	XAXIS LABEL="Sesso";
+	YAXIS LABEL="Numero di persone";
+	TITLE "Distribuzione del Sesso";
+RUN;
+
+PROC SGPLOT DATA=Freq_STCIVMi;
+	VBAR STCIVMi / RESPONSE=COUNT;
+	XAXIS LABEL="Stato Civile";
+	YAXIS LABEL="Numero di persone";
+	TITLE "Distribuzione dello Stato Civile";
+RUN;
+
+PROC SGPLOT DATA=Freq_ISTRMi;
+	VBAR ISTRMi / RESPONSE=COUNT;
+	XAXIS LABEL="Titolo di Studio";
+	YAXIS LABEL="Numero di persone";
+	TITLE "Distribuzione dell'Istruzione";
+RUN;
+
+PROC SGPLOT DATA=Freq_CONDMi;
+	VBAR CONDMi / RESPONSE=COUNT;
+	XAXIS LABEL="Condizione Occupazionale";
+	YAXIS LABEL="Numero di persone";
+	TITLE "Distribuzione della Condizione Occupazionale";
+RUN;
+
+PROC SGPLOT DATA=Freq_REGMf;
+	VBAR REGMf / RESPONSE=COUNT;
+	XAXIS LABEL="Regione";
+	YAXIS LABEL="Numero di persone";
+	TITLE "Distribuzione per Regione";
+RUN;
+
+PROC SGPLOT DATA=Freq_REDPRMi;
+	VBAR REDPRMi / RESPONSE=COUNT;
+	XAXIS LABEL="Fonte Principale di Reddito";
+	YAXIS LABEL="Numero di persone";
+	TITLE "Distribuzione della Fonte di Reddito";
+RUN;
+
+PROC SGPLOT DATA=Freq_CITTMi;
+	VBAR CITTMi / RESPONSE=COUNT;
+	XAXIS LABEL="Cittadinanza";
+	YAXIS LABEL="Numero di persone";
+	TITLE "Distribuzione della Cittadinanza";
+RUN;
+
+PROC FREQ DATA=aspetti.aspetti;
+	TABLES ETAMi / OUT=FreqData;
+RUN;
+
+PROC SGPLOT DATA=FreqData;
+	VBAR ETAMi / RESPONSE=COUNT;
+	XAXIS LABEL="Fascia d'età";
+	YAXIS LABEL="Numero di persone";
+	TITLE "Distribuzione delle fasce d'età completa";
+RUN;
+
+DATA FreqData_Mod;
+	SET FreqData;
+	LENGTH FasciaEta $15;
+
+	IF ETAMi IN (1, 2, 3, 4, 5) THEN
+		FasciaEta="Meno di 15 anni";
+	ELSE IF ETAMi IN (6, 7, 8) THEN
+		FasciaEta="15-24 anni";
+	ELSE IF ETAMi IN (9) THEN
+		FasciaEta="25-34 anni";
+	ELSE IF ETAMi IN (10) THEN
+		FasciaEta="35-44 anni";
+	ELSE IF ETAMi IN (11) THEN
+		FasciaEta="45-54 anni";
+	ELSE IF ETAMi IN (12, 13) THEN
+		FasciaEta="55-64 anni";
+	ELSE IF ETAMi IN (14, 15) THEN
+		FasciaEta="65 anni e più";
+RUN;
+
+PROC SGPLOT DATA=FreqData_Mod;
+	VBAR FasciaEta / RESPONSE=COUNT;
+	XAXIS LABEL="Fascia d'età" DISCRETEORDER=DATA;
+	YAXIS LABEL="Numero di persone";
+	TITLE "Distribuzione delle fasce d'età";
+RUN;
+
+/* Adesso creiamo delle macro per poter visualizzare le frequenze e i grafici delle distribuzioni di frequenza
+per gestire le variabili binarie*/
+%macro analizza_binarie(dataset, lista_variabili);
+	%let i = 1;
+
+	%do %while(%scan(&lista_variabili., &i.) ne);
+		%let var = %scan(&lista_variabili., &i.);
+		title "Analisi della variabile &var";
+
+		/* Frequenza e distribuzione */
+		proc freq data=&dataset;
+			tables &var / missing;
+		run;
+
+		title "Grafico a barre della variabile &var";
+
+		proc sgplot data=&dataset;
+			vbar &var / stat=freq;
+		run;
+
+		%let i = %eval(&i. + 1);
+	%end;
+%mend;
+
+%analizza_binarie(aspetti.aspetti, INCOMU6 INCOMU7 INTATT11 INTATT13 INTATT18A 
+	PC TELCIN SESSO);
+
+/* Importazione dataset 2019 e merge con il dataset 2023 */
+proc import datafile="/home/u64178956/vita_quotidiana/AVQ_Microdati_2019.txt" 
+		out=aspetti.microdati2019 /* output nella libreria 'aspetti' */
+		dbms=dlm replace;
+	delimiter='09'x;
+	getnames=yes;
+run;
+
+/* Estrazione del nome e tipo delle variabili per entrambi i dataset (2023 e 2019) */
+proc contents data=aspetti.microdati2023 out=vars2023(keep=name type) noprint;
+run;
+
+proc contents data=aspetti.microdati2019 out=vars2019(keep=name type) noprint;
+run;
+
+/* Raggruppamento di entrambi i dataset per nome e tipo (serve per il merge) */
+proc sort data=vars2023;
+	by name type;
+run;
+
+proc sort data=vars2019;
+	by name type;
+run;
+
+/* Creazione di una tabella con solo le variabili che hanno lo stesso nome e lo stesso tipo */
+data var_comuni_stesso_tipo;
+	merge vars2023(in=a) vars2019(in=b);
+	by name type;
+
+	if a and b;
+
+	/* tiene solo le variabili comuni a entrambi */
+run;
+
+/* Creazione di una macrovariabile con la lista dei nomi delle variabili comuni */
+data _null_;
+	set var_comuni_stesso_tipo end=last;
+	length allvars $10000;
+
+	/* Spazio sufficiente per salvare tutti i nomi */
+	retain allvars '';
+
+	/* Si inizializza la stringa una sola volta */
+	allvars=catx(' ', allvars, name);
+
+	if last then
+		call symputx('var_list', allvars);
+run;
+
+/* Accodamento dei dataset 2019 e 2023 mantenendo solo le variabili comuni */
+data aspetti.microdati_2019_2023;
+	/*Creazione di un nuovo dataset chiamato microdati_2019_2023 nella libreria aspetti*/
+	set aspetti.microdati2019(in=a keep=&var_list)/*keep=&var_list: tiene solo le variabili elencate nella macrovariabile &var_list*/
+	aspetti.microdati2023(in=b keep=&var_list);
+
+	/*in=a o in=b Capisce da dove arriva ogni riga assegnadno una variabile temporanea*/
+	if a then
+		anno=2019;
+	else if b then
+		anno=2023;
+run;
+
+/* Creazione di indicatori per la comparazione della variazione  dell'uso della tecnologia fra il 2019 e il 2023*/
+
+/*INDICE TECNOLOGICO  2019-2023*/
+
+data aspetti.microdati_2019_2023;
+	set aspetti.microdati_2019_2023;
+
+	/* Uso tecnologia costante tra anni */
+	uso_internet=(FREQIN12 in (1, 2, 3));
+	uso_pc=(FREQPC12 in (1, 2, 3));
+	usa_cell=(USOCEL in (1, 2));
+	ha_pc=(PC=2);
+	ha_internet=(AINTERN=2);
+	ha_console=(VGIOC in (2, 4));
+	legge_ebook=(INTATT31=4);
+	usa_banca_online=(INTATT11=2);
+	compra_online=(INTCOM in (1, 2));
+	usa_mail=(INCOMU5=2);
+
+	/* Variabili con codifica diversa tra anni */
+	if ANNO=2019 then
+		do;
+			usa_social=(INCOMU6=2);
+			scrive_online=(INCOMU7=4);
+			vota_online=(INCOMU8=6);
+			usa_excel=(PCOPEXC=4);
+			scrive_codice=(PCOPECO=8);
+			usa_word=(PCOPEWO=4);
+			usa_photo=(PCOPEPH=6);
+		end;
+	else if ANNO=2023 then
+		do;
+			usa_social=(INCOMU6=8);
+			scrive_online=(INCOMU7=2);
+			vota_online=(INCOMU8=4);
+			usa_excel=(PCOPEXC=2);
+			scrive_codice=(PCOPECO=6);
+			usa_word=(PCOPEWO=2);
+			usa_photo=(PCOPEPH=4);
+		end;
+
+	/* Costruzione indice finale */
+	indice_tecnologico_totale=sum(uso_internet, uso_pc, usa_cell, ha_pc, 
+		ha_internet, ha_console, legge_ebook, usa_banca_online, compra_online, 
+		usa_mail, usa_social, scrive_online, vota_online, usa_word, usa_photo, 
+		usa_excel, scrive_codice);
+run;
+
+data aspetti.microdati_2019_2023;
+	set aspetti.microdati_2019_2023;
+	length livello_tecnologia $6;
+
+	if indice_tecnologico_totale <=5 then
+		livello_tecnologia="Basso";
+	else if indice_tecnologico_totale <=10 then
+		livello_tecnologia="Medio";
+	else
+		livello_tecnologia="Alto";
+run;
+
+/*Creazione del grafico di confronto degli indici tecnologici 2019 e 2023*/
+proc freq data=aspetti.microdati_2019_2023 noprint;
+	tables anno*indice_tecnologico_totale / out=aspetti.freq_indice_tecnologico;
+run;
+
+proc sort data=aspetti.freq_indice_tecnologico;
+	by anno;
+
+	/*Si ordina il dataset freq_indice_tecnologico in base alla variabile anno*/
+run;
+
+/*Creazione dei totali del 2019 e 2023 mettendoli in macrovariabili*/
+data aspetti.freq_indice_tecnologico;
+	set aspetti.freq_indice_tecnologico;
+	by anno;
+
+	/*Questo passo apre un nuovo data step, legge il dataset riga per riga by anno e permette di individuare
+	l’inizio e la fine di ciascun gruppo di anno*/
+	retain totale;
+
+	/* Creazione della variabile totale, che si mantiene in memoria con retain ogni riga*/
+	if first.anno then
+		totale=0;
+
+	/*Ogni volta che comincia un nuovo gruppo (anno=2019, poi anno=2023),
+	azzeriamo la variabile totale per ricominciare la somma.*/
+	totale + count;
+
+	if last.anno then
+		call symputx('tot_'||strip(put(anno, 4.)), totale);
+
+	/*Se è l'ultima riga dell'anno crea macrovariaible e
+	inserisce il  totale (tot_2019); poi fa la stessa cosa con 2023 (tot_2023)*/
+run;
+
+data aspetti.freq_indice_tecnologico;
+	set aspetti.freq_indice_tecnologico;
+	length Percentuale 8.;
+
+	if anno=2019 then
+		Percentuale=(count / &tot_2019) * 100;
+
+	/*Con i conteggi di ogni indice creati dalla tabella con proq freq
+	si calcola la percentuale dividendo per le macrovariabili create e moltiplicando per 100*/
+	else if anno=2023 then
+		Percentuale=(count / &tot_2023) * 100;
+run;
+
+/*Creazione del grafico a linee per confrontare gli indici del 2019 e del 2023*/
+proc sgplot data=aspetti.freq_indice_tecnologico;
+	title "Andamento dell'Indice Tecnologico Totale (2019 vs 2023)";
+	series x=indice_tecnologico_totale y=Percentuale / group=anno markers 
+		lineattrs=(thickness=2);
+	xaxis label="Indice Tecnologico Totale";
+	yaxis label="Percentuale (%)";
+run;
+
+/* La macro seguente permette di creare delle tabelle di contingenza e dei grafici con frequenze relative*/
+%macro tabella_grafico(dataset, var1, var2);
+	proc freq data=&dataset noprint;
+		tables &var1 * &var2 / out=tabella_contingenza;
+	run;
+
+	/* Calcolo del totale dei conteggi  */
+	data _null_;
+		retain totale 0;
+		set tabella_contingenza end=ultimo;
+		totale + count;
+
+		if ultimo then
+			call symput('totale', totale);
+	run;
+
+	data tabella_contingenza_pct;
+		set tabella_contingenza;
+		percent=(count / &totale) * 100;
+	run;
+
+	/* Creazione del grafico */
+	proc sgplot data=tabella_contingenza_pct;
+		vbar &var2 / response=percent group=&var1 groupdisplay=cluster datalabel;
+		yaxis label="Frequenza relativa (%)";
+		title "Distribuzione di &var2 per &var1";
+	run;
+
+%mend tabella_grafico;
+
+/* Esempio di utilizzo */
+%tabella_grafico(aspetti.aspetti, SESSO, ISTRMi);
+
+/* ANALISI DIACRONICA DELLE VARIABILI TECNOLOGICHE CON LE VARIABILI ANAGRAFICHE */
+
+/* Selezione delle variabili su cui vogliamo concentrare l'attenzione */
+data aspetti.tech_solo_var_richieste;
+	set aspetti.microdati_2019_2023 (keep=FREQIN12 INCOMU6 INCOMU7 INTATT11 
+		INTATT13 INTATT18A TELCIN PC ANNO);
+run;
+
+/* Creazione di tre gruppi per gestire i missing */
+
+data aspetti.tre_gruppi_dettaglio;
+	set aspetti.tech_solo_var_richieste;
+
+	/* GRUPPO 1: Uso internet e online */
+	/* Componenti: FREQIN12 (frequenza internet), INCOMU6 (social), INCOMU7 (opinioni) */
+	
+	/* Variabile 1: Uso Internet (FREQIN12), gestione dei missing */
+	if FREQIN12 in (1, 2, 3) then
+		usa_internet=1;
+
+	/* Sì: almeno settimanale */
+	else if FREQIN12 ne . then
+		usa_internet=0;
+
+	/* No: valori validi diversi */
+	/* Se FREQIN12 = . allora usa_internet rimane missing automaticamente */
+	
+	/* Variabile 2: Social Network (INCOMU6), gestione dei missing  */
+	if ANNO=2019 and INCOMU6=2 then
+		usa_social=1;
+
+	/* Sì nel 2019 */
+	else if ANNO=2023 and INCOMU6=8 then
+		usa_social=1;
+
+	/* Sì nel 2023 */
+	else if INCOMU6 ne . then
+		usa_social=0;
+
+	/* No: valori validi diversi */
+	/* Se INCOMU6 = . allora usa_social rimane missing automaticamente */
+	
+	/* Variabile 3: Esprime Opinioni Online (INCOMU7), gestione dei missing  */
+	if ANNO=2019 and INCOMU7=4 then
+		esprime_opinioni=1;
+
+	/* Sì nel 2019 */
+	else if ANNO=2023 and INCOMU7=2 then
+		esprime_opinioni=1;
+
+	/* Sì nel 2023 */
+	else if INCOMU7 ne . then
+		esprime_opinioni=0;
+
+	/* No: valori validi diversi */
+	/* Se INCOMU7 = . allora esprime_opinioni rimane missing automaticamente */
+	
+	/* Punteggio Gruppo 1: solo se ha tutti i dati */
+	if nmiss(usa_internet, usa_social, esprime_opinioni)=0 then
+		punteggio_g1=usa_internet + usa_social + esprime_opinioni;
+	else
+		punteggio_g1=.;
+
+	/* Se manca anche solo una componente, punteggio = missing */
+	/* Descrizione dettagliata Gruppo 1 */
+	length desc_g1 $80;
+
+	if punteggio_g1=. then
+		desc_g1="DATI MANCANTI";
+	else if punteggio_g1=0 then
+		desc_g1="0: Non usa internet/social/opinioni";
+	else if punteggio_g1=1 then
+		desc_g1="1: Usa solo 1 tra internet/social/opinioni";
+	else if punteggio_g1=2 then
+		desc_g1="2: Usa 2 tra internet/social/opinioni";
+	else
+		desc_g1="3: Usa tutti (internet + social + opinioni)";
+
+	/* GRUPPO 2: Servizi avanzati */
+	/* Componenti: INTATT11 (banca), INTATT13 (vendite), INTATT18A (corsi) */
+	/* Variabile 1: Banking Online (INTATT11), gestione dei missing  */
+	if INTATT11=2 then
+		usa_banca=1;
+
+	/* Sì */
+	else if INTATT11 ne . then
+		usa_banca=0;
+
+	/* No: valori validi diversi */
+	/* Se INTATT11 = . allora usa_banca rimane missing automaticamente */
+	
+	/* Variabile 2: Vendite Online (INTATT13), gestione dei missing */
+	if INTATT13=4 then
+		vende_online=1;
+
+	/* Sì */
+	else if INTATT13 ne . then
+		vende_online=0;
+
+	/* No: valori validi diversi */
+	/* Se INTATT13 = . allora vende_online rimane missing automaticamente */
+	/* Variabile 3: Corsi Online (INTATT18A) - GESTIONE MISSING  */
+	if INTATT18A=2 then
+		fa_corsi=1;
+
+	/* Sì */
+	else if INTATT18A ne . then
+		fa_corsi=0;
+
+	/* No: valori validi diversi */
+	/* Se INTATT18A = . allora fa_corsi rimane missing automaticamente */
+	
+	/* Punteggio Gruppo 2: solo se ha tutti i dati */
+	if nmiss(usa_banca, vende_online, fa_corsi)=0 then
+		punteggio_g2=usa_banca + vende_online + fa_corsi;
+	else
+		punteggio_g2=.;
+
+	/* Se manca anche solo una componente, punteggio = missing */
+	/* Descrizione dettagliata Gruppo 2 */
+	length desc_g2 $80;
+
+	if punteggio_g2=. then
+		desc_g2="DATI MANCANTI";
+	else if punteggio_g2=0 then
+		desc_g2="0: Non usa servizi (no banca/vendite/corsi)";
+	else if punteggio_g2=1 then
+		desc_g2="1: Usa 1 servizio tra banca/vendite/corsi";
+	else if punteggio_g2=2 then
+		desc_g2="2: Usa 2 servizi tra banca/vendite/corsi";
+	else
+		desc_g2="3: Usa tutti i servizi (banca + vendite + corsi)";
+
+	/* GRUPPO 3: Possesso strumenti */
+	/* Componenti: TELCIN (smartphone), PC (computer) */
+	
+	/* Variabile 1: Smartphone con Internet (TELCIN), gestione dei missing */
+	if TELCIN=2 then
+		ha_smartphone=1;
+
+	/* Sì */
+	else if TELCIN ne . then
+		ha_smartphone=0;
+
+	/* No: valori validi diversi */
+	/* Se TELCIN = . allora ha_smartphone rimane missing automaticamente */
+	/* Variabile 2: Computer (PC), gestione dei missing  */
+	if PC=2 then
+		ha_computer=1;
+
+	/* Sì */
+	else if PC ne . then
+		ha_computer=0;
+
+	/* No: valori validi diversi */
+	/* Se PC = . allora ha_computer rimane missing automaticamente */
+	
+	/* Punteggio Gruppo 3: solo se ha tutti i dati */
+	if nmiss(ha_smartphone, ha_computer)=0 then
+		punteggio_g3=ha_smartphone + ha_computer;
+	else
+		punteggio_g3=.;
+
+	/* Se manca anche solo una componente, punteggio = missing */
+	/* Descrizione dettagliata Gruppo 3 */
+	length desc_g3 $60;
+
+	if punteggio_g3=. then
+		desc_g3="DATI MANCANTI";
+	else if punteggio_g3=0 then
+		desc_g3="0: Nessuno strumento";
+	else if punteggio_g3=1 then
+		desc_g3="1: Solo smartphone O solo PC";
+	else
+		desc_g3="2: Entrambi (smartphone + PC)";
+
+	/* Etichette chiare */
+	label punteggio_g1="Internet/Online: Internet freq. + Social + Opinioni (0-3)" 
+		punteggio_g2="Servizi Avanzati: Banking + Vendite + Corsi (0-3)" 
+		punteggio_g3="Strumenti: Smartphone + PC (0-2)" desc_g1="Dettaglio Gruppo 1" 
+		desc_g2="Dettaglio Gruppo 2" desc_g3="Dettaglio Gruppo 3";
+run;
+
+/* Verifica dei missing */
+proc freq data=aspetti.tre_gruppi_dettaglio;
+	tables ANNO*(punteggio_g1 punteggio_g2 punteggio_g3) / missing;
+	title "CONTROLLO QUALITÀ: Distribuzione Punteggi (inclusi missing)";
+	title2 "I missing indicano persone con dati incompleti";
+run;
+
+/* GRUPPO 1: Tabella e grafico */
+proc freq data=aspetti.tre_gruppi_dettaglio;
+	tables ANNO*desc_g1 / nocol nopercent missing;
+	title "GRUPPO 1 - USO INTERNET E ONLINE";
+	title2 "Componenti: FREQIN12 (internet freq.) + INCOMU6 (social) + INCOMU7 (opinioni online)";
+	title3 
+		"Punteggio = numero di componenti utilizzate (0-3) | Missing = dati incompleti";
+run;
+
+/* Calcolo percentuali per graficoescludendo i missing */
+proc freq data=aspetti.tre_gruppi_dettaglio noprint;
+	tables ANNO*punteggio_g1 / out=freq_g1;
+
+run;
+
+proc sort data=freq_g1;
+	by ANNO;
+run;
+
+data totali_g1;
+	set freq_g1;
+	by ANNO;
+	retain totale 0;
+
+	if first.ANNO then
+		totale=0;
+	totale + COUNT;
+
+	if last.ANNO;
+	keep ANNO totale;
+run;
+
+data pct_g1;
+	merge freq_g1 totali_g1;
+	by ANNO;
+	percentuale=(COUNT / totale) * 100;
+	format percentuale 8.1;
+run;
+
+/* Grafico del gruppo 1 */
+proc sgplot data=pct_g1;
+	vbar punteggio_g1 / response=percentuale group=ANNO groupdisplay=cluster 
+		datalabel datalabelattrs=(size=11);
+	xaxis label="Numero di attività online (Internet freq. + Social + Opinioni)" 
+		values=(0 to 3) labelattrs=(size=11 weight=bold);
+	yaxis label="Percentuale Popolazione (%)" values=(0 to 60 by 10) 
+		labelattrs=(size=11 weight=bold);
+	title height=13pt "GRUPPO 1: Uso Internet e Attività Online";
+	title2 height=11pt "0=nessuna, 1=una sola, 2=due, 3=tutte e tre le attività";
+	title3 height=10pt "Nota: Missing automaticamente esclusi dal grafico";
+	keylegend / title="Anno" position=topright;
+run;
+
+/* GRUPPO 2: Tabella e grafico */
+/* tabella con missing */
+proc freq data=aspetti.tre_gruppi_dettaglio;
+	tables ANNO*desc_g2 / nocol nopercent missing;
+	title "GRUPPO 2 - SERVIZI AVANZATI ONLINE";
+	title2 "Componenti: INTATT11 (banking) + INTATT13 (vendite) + INTATT18A (corsi online)";
+	title3 
+		"Punteggio = numero di servizi utilizzati (0-3) | Missing = dati incompleti";
+run;
+
+/* Calcolo percentuali per grafico escludendo i missing */
+proc freq data=aspetti.tre_gruppi_dettaglio noprint;
+	tables ANNO*punteggio_g2 / out=freq_g2;
+run;
+
+proc sort data=freq_g2;
+	by ANNO;
+run;
+
+data totali_g2;
+	set freq_g2;
+	by ANNO;
+	retain totale 0;
+
+	if first.ANNO then
+		totale=0;
+	totale + COUNT;
+
+	if last.ANNO;
+	keep ANNO totale;
+run;
+
+data pct_g2;
+	merge freq_g2 totali_g2;
+	by ANNO;
+	percentuale=(COUNT / totale) * 100;
+	format percentuale 8.1;
+run;
+
+/* Grafico del gruppo 2 */
+proc sgplot data=pct_g2;
+	vbar punteggio_g2 / response=percentuale group=ANNO groupdisplay=cluster 
+		datalabel datalabelattrs=(size=11);
+	xaxis label="Numero di servizi online (Banking + Vendite + Corsi)" values=(0 
+		to 3) labelattrs=(size=11 weight=bold);
+	yaxis label="Percentuale Popolazione (%)" values=(0 to 100 by 20) 
+		labelattrs=(size=11 weight=bold);
+	title height=13pt "GRUPPO 2: Servizi Avanzati Online";
+	title2 height=11pt "0=nessuno, 1=un servizio, 2=due servizi, 3=tutti e tre";
+	title3 height=10pt "Nota: Missing automaticamente esclusi dal grafico";
+	keylegend / title="Anno" position=topright;
+run;
+
+/* GRUPPO 3: Tabella e grafico */
+/* Tabella con missing */
+proc freq data=aspetti.tre_gruppi_dettaglio;
+	tables ANNO*desc_g3 / nocol nopercent missing;
+	title "GRUPPO 3 - POSSESSO STRUMENTI TECNOLOGICI";
+	title2 "Componenti: TELCIN (smartphone con internet) + PC (computer in casa)";
+	title3 
+		"Punteggio = numero di strumenti posseduti (0-2) | Missing = dati incompleti";
+run;
+
+/* Calcolo percentuali per grafico escludendo i missing */
+proc freq data=aspetti.tre_gruppi_dettaglio noprint;
+	tables ANNO*punteggio_g3 / out=freq_g3;
+run;
+
+proc sort data=freq_g3;
+	by ANNO;
+run;
+
+data totali_g3;
+	set freq_g3;
+	by ANNO;
+	retain totale 0;
+
+	if first.ANNO then
+		totale=0;
+	totale + COUNT;
+
+	if last.ANNO;
+	keep ANNO totale;
+run;
+
+data pct_g3;
+	merge freq_g3 totali_g3;
+	by ANNO;
+	percentuale=(COUNT / totale) * 100;
+	format percentuale 8.1;
+run;
+
+/* GRAFICO GRUPPO 3 */
+proc sgplot data=pct_g3;
+	vbar punteggio_g3 / response=percentuale group=ANNO groupdisplay=cluster 
+		datalabel datalabelattrs=(size=11);
+	xaxis label="Numero di strumenti tecnologici (Smartphone + PC)" values=(0 to 
+		2) labelattrs=(size=11 weight=bold);
+	yaxis label="Percentuale Popolazione (%)" values=(0 to 80 by 20) 
+		labelattrs=(size=11 weight=bold);
+	title height=13pt "GRUPPO 3: Possesso Strumenti Tecnologici";
+	title2 height=11pt "0=nessuno, 1=solo uno, 2=entrambi";
+	title3 height=10pt "Nota: Missing automaticamente esclusi dal grafico";
+	keylegend / title="Anno" position=topright;
+run;
+
+/* Tabelle riassuntive con dettagli e controllo dei missing */
+proc print data=aspetti.tre_gruppi_dettaglio(obs=0);
+	title "RIEPILOGO VARIABILI PER GRUPPO";
+	title2 "GRUPPO 1: FREQIN12 (internet) + INCOMU6 (social) + INCOMU7 (opinioni)";
+	title3 "GRUPPO 2: INTATT11 (banking) + INTATT13 (vendite) + INTATT18A (corsi)";
+	title4 "GRUPPO 3: TELCIN (smartphone) + PC (computer)";
+	title5 
+		"Missing gestiti correttamente: se manca una componente, punteggio = missing";
+run;
+
+/* Statistiche descrittive con spiegazioni */
+proc means data=aspetti.tre_gruppi_dettaglio n nmiss mean std min max;
+	class ANNO;
+	var punteggio_g1 punteggio_g2 punteggio_g3;
+	title "STATISTICHE: Punteggi Medi per Gruppo e Anno";
+	title2 "Gruppo 1 (0-3): Internet+Social+Opinioni | Gruppo 2 (0-3): Banking+Vendite+Corsi";
+	title3 "Gruppo 3 (0-2): Smartphone+PC | N=validi, Nmiss=missing";
+run;
+
+/* Dettaglio utilizzo singole componenti con missing */
+proc freq data=aspetti.tre_gruppi_dettaglio;
+	tables ANNO*(usa_internet usa_social esprime_opinioni) / nocol missing;
+	title "DETTAGLIO GRUPPO 1: Utilizzo Singole Componenti";
+	title2 "Missing mostrano persone con dati incompleti";
+run;
+
+proc freq data=aspetti.tre_gruppi_dettaglio;
+	tables ANNO*(usa_banca vende_online fa_corsi) / nocol missing;
+	title "DETTAGLIO GRUPPO 2: Utilizzo Singole Componenti";
+	title2 "Missing mostrano persone con dati incompleti";
+run;
+
+proc freq data=aspetti.tre_gruppi_dettaglio;
+	tables ANNO*(ha_smartphone ha_computer) / nocol missing;
+	title "DETTAGLIO GRUPPO 3: Possesso Singoli Strumenti";
+	title2 "Missing mostrano persone con dati incompleti";
+run;
+
+/* Analisi dell'indice tecnologico 2023 per condizione occupazionale */
+/* Esecuzione della macro per creare il dataset 2023 */
+/* PARTE 1: Creazione dell'indice tecnologico */
+data aspetti.microdati_2023_clean;
+	set aspetti.aspetti;
+
+	/* Variabili tecnologiche */
+	uso_internet=(FREQIN12 in (1, 2, 3));
+	uso_pc=(PC=2);
+	usa_cell=(TELCIN=2);
+	usa_banca_online=(INTATT11=2);
+	compra_online=(INTATT13=4);
+	usa_social=(INCOMU6=8);
+	scrive_online=(INCOMU7=2);
+	
+	/* Calcolo dell'indice tecnologico */
+	indice_tecnologico_2023=sum(uso_internet, uso_pc, usa_cell, usa_banca_online, 
+		compra_online, usa_social, scrive_online);
+
+	/* Livello tecnologia (categorico) */
+	length livello_tecnologia_2023 $6;
+	if indice_tecnologico_2023 <=2 then
+		livello_tecnologia_2023="Basso";
+	else if indice_tecnologico_2023 <=4 then
+		livello_tecnologia_2023="Medio";
+	else
+		livello_tecnologia_2023="Alto";
+
+	/* Variabile numerica per il livello tecnologico (utile per correlazioni) */
+	if livello_tecnologia_2023="Basso" then livello_tecnologia_num=1;
+	else if livello_tecnologia_2023="Medio" then livello_tecnologia_num=2;
+	else if livello_tecnologia_2023="Alto" then livello_tecnologia_num=3;
+
+	/* Filtro per rimuovere osservazioni con condizione occupazionale non disponibile */
+	if CONDMi not in (9, .) and indice_tecnologico_2023 ne .;
+
+	/* ETICHETTE per una migliore interpretazione */
+	label indice_tecnologico_2023="Indice Tecnologico (0-7)" 
+		livello_tecnologia_2023="Livello Uso Tecnologia" 
+		livello_tecnologia_num="Livello Tecnologia Numerico (1-3)" 
+		uso_internet="Usa Internet" 
+		uso_pc="Usa PC" 
+		usa_cell="Usa Cellulare" 
+		usa_banca_online="Usa Banca Online" 
+		compra_online="Compra Online" 
+		usa_social="Usa Social Media" 
+		scrive_online="Scrive Online";
+run;
+
+/* PARTE 2: ANALISI DESCRITTIVE E CORRELAZIONI */
+
+/* 1. STATISTICHE DESCRITTIVE DELL'INDICE PER CONDIZIONE */
+proc means data=aspetti.microdati_2023_clean n mean median std min max;
+	class CONDMi;
+	var indice_tecnologico_2023;
+	title "Statistiche descrittive dell'indice tecnologico 2023 per condizione occupazionale";
+	format CONDMi condizione.;
+run;
+
+/* 2. TABELLA INCROCIATA LIVELLI TECNOLOGICI E CONDIZIONE */
+proc tabulate data=aspetti.microdati_2023_clean missing;
+	class CONDMi livello_tecnologia_2023;
+	table CONDMi='Condizione Occupazionale' ALL='TOTALE', 
+		(livello_tecnologia_2023='Livello Tecnologico' ALL='TOTALE')*(n='N' 
+		rowpctn='% Riga');
+	title "Distribuzione del livello tecnologico 2023 per condizione occupazionale";
+	title2 "Frequenze assolute e percentuali di riga";
+	format CONDMi condizione.;
+run;
+/* GRAFICO BOXPLOT per visualizzare le distribuzioni */
+proc sgplot data=aspetti.microdati_2023_clean;
+	vbox indice_tecnologico_2023 / category=CONDMi;
+	title "Distribuzione dell'indice tecnologico 2023 per condizione occupazionale";
+	xaxis label="Condizione occupazionale";
+	yaxis label="Indice tecnologico 2023";
+	format CONDMi condizione.;
+run;
+
+/* GRAFICO A BARRE STACKED - COMPOSIZIONE LIVELLI PER CONDIZIONE */
+proc sgplot data=aspetti.microdati_2023_clean;
+	vbar CONDMi / group=livello_tecnologia_2023 stat=percent groupdisplay=stack;
+	title "Composizione percentuale dei livelli tecnologici 2023 per condizione occupazionale";
+	xaxis label="Condizione occupazionale";
+	yaxis label="Percentuale";
+	format CONDMi condizione.;
+run;
+
+data analisi_filtrata;
+	set aspetti.aspetti;
+
+	/* PARTE 1: Variabili tecnologiche */
+	uso_internet=(FREQIN12 in (1, 2, 3));
+	uso_pc=(PC=2);
+	usa_cell=(TELCIN=2);
+	usa_banca_online=(INTATT11=2);
+	compra_online=(INTATT13=4);
+	usa_social=(INCOMU6=8);
+	scrive_online=(INCOMU7=2);
+	indice_tecnologico_2023=sum(uso_internet, uso_pc, usa_cell, usa_banca_online, 
+		compra_online, usa_social, scrive_online);
+
+	/* Livello tecnologia (categorico) */
+	length livello_tecnologia $6;
+
+	if indice_tecnologico_2023 <=2 then
+		livello_tecnologia="Basso";
+	else if indice_tecnologico_2023 <=4 then
+		livello_tecnologia="Medio";
+	else
+		livello_tecnologia="Alto";
+
+	/* ETICHETTE per una migliore interpretazione */
+	label indice_tecnologico_2023="Indice Tecnologico (0-7)" 
+		livello_tecnologia="Livello Uso Tecnologia" 
+		livello_tecnologia_num="Livello Tecnologia Numerico (1-3)" 
+		uso_internet="Usa Internet" uso_pc="Usa PC" usa_cell="Usa Cellulare" 
+		usa_banca_online="Usa Banca Online" compra_online="Compra Online" 
+		usa_social="Usa Social Media" scrive_online="Scrive Online";
+run;
+
+
+/* Tabella 1: Livello Tecnologia per Sesso */
+proc freq data=analisi_filtrata;
+	tables livello_tecnologia * SESSO / chisq expected cellchi2 nocol norow;
+	title "Tabella di Contingenza: Livello Tecnologia per Sesso";
+run;
+
+/* Tabella 2: Livello Tecnologia per Età */
+proc freq data=analisi_filtrata;
+	tables livello_tecnologia * ETAMi / chisq expected cellchi2 nocol norow;
+	title "Tabella di Contingenza: Livello Tecnologia per Età";
+run;
+
+/* Tabella 3: Livello Tecnologia per Condizione Lavorativa */
+proc freq data=analisi_filtrata;
+	tables livello_tecnologia * CONDMi / chisq expected cellchi2 nocol norow;
+	title "Tabella di Contingenza: Livello Tecnologia per Condizione Lavorativa";
+run;
+
+/* Tabella 4: Livello Tecnologia per Istruzione */
+proc freq data=analisi_filtrata;
+	tables livello_tecnologia * ISTRMi / chisq expected cellchi2 nocol norow;
+	title "Tabella di Contingenza: Livello Tecnologia per Istruzione";
+run;
+
+/* Tabella 5: Livello Tecnologia per Regione */
+proc freq data=analisi_filtrata;
+	tables livello_tecnologia * REGMf / chisq expected cellchi2 nocol norow;
+	title "Tabella di Contingenza: Livello Tecnologia per Regione";
+run;
+
+/* Riepilogo di tutte le associazioni */
+proc freq data=analisi_filtrata;
+	tables livello_tecnologia * (SESSO ETAMi CONDMi ISTRMi REGMf) / chisq nocol 
+		norow nopercent;
+	title "Riepilogo Test Chi-quadro per tutte le variabili";
+run;
+
+
+/* Analisi multivariata */
+
+/* Creazione di una variabile numerica per l'analisi multivariata */
+data analisi_multivariata;
+	set analisi_filtrata;
+
+	/* Conversione livello tecnologia in numerico ordinale */
+	if livello_tecnologia="Basso" then
+		livello_tech_num=1;
+	else if livello_tecnologia="Medio" then
+		livello_tech_num=2;
+	else if livello_tecnologia="Alto" then
+		livello_tech_num=3;
+
+	/* Verifica che non ci siano valori mancanti nelle variabili chiave */
+	if not missing(livello_tech_num) and not missing(SESSO) and not missing(ETAMi) 
+		and not missing(CONDMi) and not missing(ISTRMi) and not missing(REGMf);
+run;
+
+/* Regressione logistica ordinale */
+
+proc logistic data=analisi_multivariata;
+	class SESSO ETAMi CONDMi ISTRMi REGMf / param=ref;
+	model livello_tech_num=SESSO ETAMi CONDMi ISTRMi REGMf;
+	title "Modello Logistico Ordinale - Predittori del Livello Tecnologico";
+	output out=logistic_results predicted=pred_prob;
+run;
+
+/* Analisi della varianza (ANOVA) */
+
+proc glm data=analisi_multivariata plots(maxpoints=10000)=all;
+	class SESSO ETAMi CONDMi ISTRMi REGMf;
+	
+	/* Modello con interazioni di secondo ordine più specifiche */
+	model indice_tecnologico_2023=SESSO ETAMi CONDMi ISTRMi REGMf 
+									SESSO*ETAMi SESSO*ISTRMi 
+									ETAMi*ISTRMi CONDMi*ISTRMi
+									SESSO*CONDMi;
+	
+	/* Test delle medie per gli effetti principali */
+	means SESSO ETAMi CONDMi ISTRMi REGMf / tukey cldiff;
+	
+	/* Test specifici per le interazioni più rilevanti */
+	lsmeans SESSO*ETAMi / pdiff adjust=tukey;
+	lsmeans CONDMi*ISTRMi / pdiff adjust=tukey;
+	lsmeans SESSO*ISTRMi / pdiff adjust=tukey;
+	
+	title "ANOVA - Effetti delle variabili socio-demografiche";
+run;
+
+
+
+/* Analisi delle correlazioni */
+	
+proc corr data=analisi_multivariata spearman plots=matrix;
+	var indice_tecnologico_2023 livello_tech_num;
+	with SESSO ETAMi CONDMi ISTRMi REGMf;
+	title "Correlazioni di Spearman tra Variabili";
+run;
+
+
+/* Analisi descrittive */
+
+/* Distribuzione percentuale delle variabili socio-demografiche per livello */
+proc tabulate data=analisi_multivariata format=8.2;
+	class livello_tecnologia SESSO ETAMi CONDMi ISTRMi;
+	table livello_tecnologia, (SESSO ETAMi CONDMi ISTRMi) * pctn<SESSO ETAMi 
+		CONDMi ISTRMi>;
+	title "Profilo Socio-demografico per Livello Tecnologico (%)";
+run;
+
+/* Sintesi e interpretazione */
+
+/* Creazione di un dataset di sintesi per le conclusioni usando PROC MEANS */
+proc means data=analisi_multivariata noprint;
+	class livello_tecnologia;
+	var indice_tecnologico_2023;
+	output out=sintesi_analisi n=N_osservazioni mean=Media_Indice 
+		std=Dev_Std_Indice;
+run;
+
+/* Rimozione della riga di totale generale */
+data sintesi_analisi;
+	set sintesi_analisi;
+	where livello_tecnologia ne '';
+run;
+
+proc print data=sintesi_analisi;
+	title "Sintesi dell'Analisi: Distribuzione dei Livelli Tecnologici";
+	format Media_Indice Dev_Std_Indice 8.3;
+	var livello_tecnologia N_osservazioni Media_Indice Dev_Std_Indice;
+run;
