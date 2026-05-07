@@ -1,5 +1,9 @@
 # Digital Divide in Italia: Analisi dell'uso della tecnologia post-Covid (2019–2023)
 
+> **Progetto accademico di gruppo**  
+> Autori: Daniele Cepparrone, Simone Meli, Federico Orizzonte  
+> Master in Analisi Dati per la Business Intelligence — Università di Torino, A.A. 2024/2025
+
 ## Descrizione del progetto
 Analisi statistica dei cambiamenti nei comportamenti digitali della popolazione italiana 
 prima e dopo la pandemia di Covid-19, condotta su dati reali ISTAT dell'indagine 
