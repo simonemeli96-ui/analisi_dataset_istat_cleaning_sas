@@ -32,6 +32,21 @@ fattori socio-demografici associati al digital divide nel 2023.
   PROC LOGISTIC, PROC GLM, PROC CORR, PROC FORMAT, DATA Step, Macro SAS
 
 ---
+## Principali procedure SAS utilizzate
+
+| Procedura | Scopo |
+|---|---|
+| `DATA Step` | Preparazione dati, merge dataset 2019-2023, costruzione indice |
+| `PROC FORMAT` | Decodifica e standardizzazione delle variabili |
+| `PROC FREQ` | Distribuzioni di frequenza e test Chi-quadro |
+| `PROC MEANS` | Statistiche descrittive e analisi valori mancanti |
+| `PROC SGPLOT` | Visualizzazioni grafiche |
+| `PROC GLM` | ANOVA con interazioni (R² = 0.481) |
+| `PROC LOGISTIC` | Regressione logistica ordinale |
+| `PROC CORR` | Correlazioni di Spearman |
+| `PROC TABULATE` | Tabelle di riepilogo |
+
+---
 
 ## Metodologia
 
@@ -84,6 +99,19 @@ ma con valori diversi (es. INCOMU6, INCOMU7).
 
 ---
 
-## Note
-I microdati ISTAT utilizzati sono pubblici e disponibili sul portale ISTAT.  
-Il dataset grezzo non è incluso nel repository per ragioni di dimensione.
+## Struttura del repository
+
+| File | Descrizione |
+|---|---|
+| `analisi_digital_divide.sas` | Codice SAS completo: data preparation, indice tecnologico, analisi statistica |
+| `Report SAS.docx` | Report descrittivo dell'analisi |
+
+---
+
+## Note sui dati
+
+I microdati ISTAT utilizzati sono pubblici e disponibili sul 
+[portale ISTAT](https://www.istat.it/it/archivio/91926).  
+Il dataset grezzo non è incluso nel repository per ragioni di dimensione.  
+Il codice SAS è eseguibile scaricando i microdati AVQ 2019 e 2023 
+direttamente dal portale ISTAT.
